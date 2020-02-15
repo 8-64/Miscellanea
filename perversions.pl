@@ -39,6 +39,25 @@ use Test::More;
         ), 'Carthesian calculated using glob as expected');
 }
 
+# Use "qw" or "qq" to check whether parentheses are balanced. Surprisingly efficient!
+{
+    sub AreBalanced {
+        my ($data) = @_;
+        my $result = 1;
+
+        eval("qq($data)");
+        $result = 0 if ($@);
+        $result;
+    }
+
+    ok((
+        AreBalanced('()')
+    and !AreBalanced(')(')
+    and !AreBalanced('())')
+    and AreBalanced('(()()())()'),
+        ), 'Is the parentheses balance determined?');
+}
+
 done_testing();
 
 =encoding UTF-8
